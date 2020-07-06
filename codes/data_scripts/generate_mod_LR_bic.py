@@ -12,11 +12,11 @@ except ImportError:
 
 def generate_mod_LR_bic():
     # set parameters
-    up_scale = 4
-    mod_scale = 4
+    up_scale = 2
+    mod_scale = 2
     # set data dir
-    sourcedir = '/data/datasets/img'
-    savedir = '/data/datasets/mod'
+    sourcedir = '/data/fangcheng.ji/datasets/super_resolution/set_fashion'
+    savedir = '/data/fangcheng.ji/datasets/super_resolution/val_fashion'
 
     saveHRpath = os.path.join(savedir, 'HR', 'x' + str(mod_scale))
     saveLRpath = os.path.join(savedir, 'LR', 'x' + str(up_scale))
@@ -50,7 +50,7 @@ def generate_mod_LR_bic():
     else:
         print('It will cover ' + str(saveBicpath))
 
-    filepaths = [f for f in os.listdir(sourcedir) if f.endswith('.png')]
+    filepaths = [f for f in os.listdir(sourcedir) if f.endswith('.jpg')]
     num_files = len(filepaths)
 
     # prepare data with augementation

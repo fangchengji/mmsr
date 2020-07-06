@@ -33,6 +33,8 @@ for phase, dataset_opt in sorted(opt['datasets'].items()):
     test_loaders.append(test_loader)
 
 model = create_model(opt)
+t1 = time.time()
+count = 0
 for test_loader in test_loaders:
     test_set_name = test_loader.dataset.opt['name']
     logger.info('\nTesting [{:s}]...'.format(test_set_name))
@@ -47,10 +49,15 @@ for test_loader in test_loaders:
     test_results['ssim_y'] = []
 
     for data in test_loader:
+        # skip the big image
+        if data['size'][0] >= 1000 or data['size'][1] >= 1000:
+            continue
+        count += 1
         need_GT = False if test_loader.dataset.opt['dataroot_GT'] is None else True
         model.feed_data(data, need_GT=need_GT)
         img_path = data['GT_path'][0] if need_GT else data['LQ_path'][0]
         img_name = osp.splitext(osp.basename(img_path))[0]
+        sku_name = img_path.split('/')[-2] + '_'
 
         model.test()
         visuals = model.get_current_visuals(need_GT=need_GT)
@@ -62,7 +69,7 @@ for test_loader in test_loaders:
         if suffix:
             save_img_path = osp.join(dataset_dir, img_name + suffix + '.png')
         else:
-            save_img_path = osp.join(dataset_dir, img_name + '.png')
+            save_img_path = osp.join(dataset_dir, sku_name + img_name + '.png')
         util.save_img(sr_img, save_img_path)
 
         # calculate PSNR and SSIM
@@ -103,3 +110,5 @@ for test_loader in test_loaders:
             logger.info(
                 '----Y channel, average PSNR/SSIM----\n\tPSNR_Y: {:.6f} dB; SSIM_Y: {:.6f}\n'.
                 format(ave_psnr_y, ave_ssim_y))
+
+logger.info(f"Average inference time {(time.time() - t1) /(count + 1e-5)} s")

@@ -9,7 +9,7 @@ from utils import util  # noqa: E402
 
 
 def main():
-    dataset = 'DIV2K800_sub'  # REDS | Vimeo90K | DIV2K800_sub
+    dataset = 'batch6'  # REDS | Vimeo90K | DIV2K800_sub
     opt = {}
     opt['dist'] = False
     opt['gpu_ids'] = [0]
@@ -68,6 +68,21 @@ def main():
         opt['use_rot'] = True
         opt['color'] = 'RGB'
         opt['data_type'] = 'lmdb'  # img | lmdb
+    elif dataset == 'batch6':
+        opt['name'] = 'batch6'
+        opt['dataroot_GT'] = '../../datasets/super_resolution/batch6/HR_train'
+        opt['dataroot_LQ'] = '../../datasets/super_resolution/batch6/LR_train/x2'
+        opt['mode'] = 'LQGT'
+        opt['phase'] = 'train'
+        opt['use_shuffle'] = True
+        opt['n_workers'] = 8
+        opt['batch_size'] = 16
+        opt['GT_size'] = 128
+        opt['scale'] = 2
+        opt['use_flip'] = True
+        opt['use_rot'] = True
+        opt['color'] = 'RGB'
+        opt['data_type'] = 'img'  # img | lmdb
     else:
         raise ValueError('Please implement by yourself.')
 

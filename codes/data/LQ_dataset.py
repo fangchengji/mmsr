@@ -42,7 +42,7 @@ class LQDataset(data.Dataset):
             img_LQ = img_LQ[:, :, [2, 1, 0]]
         img_LQ = torch.from_numpy(np.ascontiguousarray(np.transpose(img_LQ, (2, 0, 1)))).float()
 
-        return {'LQ': img_LQ, 'LQ_path': LQ_path}
+        return {'LQ': img_LQ, 'LQ_path': LQ_path, 'size': (H, W)}
 
     def __len__(self):
         return len(self.paths_LQ)
